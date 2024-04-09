@@ -8,6 +8,6 @@ matplotlib
 numpy
 librosa
 sqlalchemy
-sklearn
+scikit-learn
 pydub
 python-dotenv
