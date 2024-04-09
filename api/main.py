@@ -66,8 +66,7 @@ Base.metadata.bind = engine
 # Create tables in the database
 Base.metadata.create_all(engine)
 
-MODEL = tf.keras.models.load_model("../models/models/1")
-
+MODEL = tf.keras.models.load_model("/opt/render/project/src/models/models/1/mymodel.h5")
 emotion_classes = ["sad", "disgust", "happy", "neutral", "angry", "calm", "surprise", "fear"]
 
 @app.get("/")
@@ -81,7 +80,7 @@ async def ping():
 # Function to save uploaded file to a temporary location
 async def save_uploaded_file(file: UploadFile) -> str:
     # Create a temporary file in a custom temporary directory
-    _, temp_file_path = tempfile.mkstemp(dir="E:/mentalhealth/api/temp", suffix=".wav")
+    _, temp_file_path = tempfile.mkstemp(dir="/opt/render/project/src/temp", suffix=".wav")
     with open(temp_file_path, "wb") as temp_file:
         temp_file.write(await file.read())
     return temp_file_path
@@ -181,7 +180,7 @@ async def predict(patient_id: int, patient_age: int, patient_name: str, file: Up
     print(0)
     file_path = await save_uploaded_file(file)  # Save uploaded file to a temporary location
     print(4)
-    segments = divide_audio(file_path, segment_length=5, temp_dir="E://mentalhealth//api//temp")  # Divide audio into segments
+    segments = divide_audio(file_path, segment_length=5, temp_dir="//opt//render//project//src//temp")  # Divide audio into segments
     print(5)
     predictions = []
     for segment in segments:
@@ -336,5 +335,5 @@ async def get_analysis(patient_id: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host='localhost', port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=10000)
 
