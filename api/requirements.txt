@@ -7,3 +7,4 @@ tensorflow-serving-api
 matplotlib
 numpy
 librosa
+sqlalchemy
