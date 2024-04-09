@@ -11,3 +11,4 @@ sqlalchemy
 scikit-learn
 pydub
 python-dotenv
+psycopg2
