@@ -9,7 +9,7 @@ from pydantic import BaseModel
 import matplotlib.pyplot as plt
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime, JSON
-from sqlalchemy.orm import declarative_base, sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
 from pydub import AudioSegment
 from typing import List, Dict
@@ -59,11 +59,7 @@ class PatientIn(BaseModel):
 
 temp_files = []
 # Create tables in the database
-# Create tables in the database
-# Bind the engine to the Base class
 Base.metadata.bind = engine
-
-# Create tables in the database
 Base.metadata.create_all(engine)
 
 MODEL = tf.keras.models.load_model("/opt/render/project/src/models/models/1/mymodel.h5")
@@ -74,15 +70,14 @@ def read_root():
     return {"message": "Welcome to my FastAPI application!"}
 
 @app.get("/ping")
-async def ping():
+def ping():
     return "Hello, I am alive"
 
 # Function to save uploaded file to a temporary location
-async def save_uploaded_file(file: UploadFile) -> str:
-    # Create a temporary file in a custom temporary directory
+def save_uploaded_file(file: UploadFile) -> str:
     _, temp_file_path = tempfile.mkstemp(dir="/opt/render/project/src/temp", suffix=".wav")
     with open(temp_file_path, "wb") as temp_file:
-        temp_file.write(await file.read())
+        temp_file.write(file.file.read())
     return temp_file_path
 
 def divide_audio(audio_path: str, segment_length: float, temp_dir: str) -> List[np.ndarray]:
@@ -100,10 +95,7 @@ def divide_audio(audio_path: str, segment_length: float, temp_dir: str) -> List[
     return segments
 
 def delete_files_in_folder(folder_path):
-    # Get a list of all files in the folder
     files = os.listdir(folder_path)
-    
-    # Iterate over each file and delete it
     for file_name in files:
         file_path = os.path.join(folder_path, file_name)
         try:
@@ -129,59 +121,38 @@ def pitch(data, sampling_rate, pitch_factor=0.7):
     return librosa.effects.pitch_shift(data, sr=sampling_rate,n_steps = 1)
 
 def extract_features(data,sample_rate):
-    # ZCR
     result = np.array([])
     zcr = np.mean(librosa.feature.zero_crossing_rate(y=data).T, axis=0)
-    result=np.hstack((result, zcr)) # stacking horizontally
-
-    # Chroma_stft
+    result=np.hstack((result, zcr))
     stft = np.abs(librosa.stft(data))
     chroma_stft = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T, axis=0)
-    result = np.hstack((result, chroma_stft)) # stacking horizontally
-
-    # MFCC
+    result = np.hstack((result, chroma_stft))
     mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sample_rate).T, axis=0)
-    result = np.hstack((result, mfcc)) # stacking horizontally
-
-    # Root Mean Square Value
+    result = np.hstack((result, mfcc))
     rms = np.mean(librosa.feature.rms(y=data).T, axis=0)
-    result = np.hstack((result, rms)) # stacking horizontally
-
-    # MelSpectogram
+    result = np.hstack((result, rms))
     mel = np.mean(librosa.feature.melspectrogram(y=data, sr=sample_rate).T, axis=0)
-    result = np.hstack((result, mel)) # stacking horizontally
-
+    result = np.hstack((result, mel))
     return result
 
 def get_features(path):
-    # duration and offset are used to take care of the no audio in start and the ending of each audio files as seen above.
     data, sample_rate = librosa.load(path, duration=2.5, offset=0.6)
-
-    # without augmentation
     res1 = extract_features(data,sample_rate)
     result = np.array(res1)
-
-    # data with noise
     noise_data = noise(data)
     res2 = extract_features(noise_data,sample_rate)
-    result = np.vstack((result, res2)) # stacking vertically
+    result = np.vstack((result, res2))
     rate = 0.8
-    # data with stretching and pitching
     new_data = stretch(data)
     data_stretch_pitch = pitch(new_data, sample_rate)
     res3 = extract_features(data_stretch_pitch,sample_rate)
-    result = np.vstack((result, res3)) # stacking vertically
-
+    result = np.vstack((result, res3))
     return result
 
-
 @app.post("/predict")
-async def predict(patient_id: int, patient_age: int, patient_name: str, file: UploadFile = File(...)) -> Dict:
-    print(0)
-    file_path = await save_uploaded_file(file)  # Save uploaded file to a temporary location
-    print(4)
-    segments = divide_audio(file_path, segment_length=5, temp_dir="//opt//render//project//src//temp")  # Divide audio into segments
-    print(5)
+def predict(patient_id: int, patient_age: int, patient_name: str, file: UploadFile = File(...)) -> Dict:
+    file_path = save_uploaded_file(file)
+    segments = divide_audio(file_path, segment_length=5, temp_dir="//opt//render//project//src//temp")
     predictions = []
     for segment in segments:
         scaler = StandardScaler()
@@ -190,28 +161,14 @@ async def predict(patient_id: int, patient_age: int, patient_name: str, file: Up
         predictions.append(prediction)
 
     delete_files_in_folder("E://mentalhealth# api//temp")
-    # Aggregate predictions for all segments
     aggregated_prediction = np.mean(predictions, axis=0)
-
-    # Extract all confidences for all predictions
     confidences = [[round(float(conf), 2) for conf in confidence_probs] for confidence_probs in aggregated_prediction]
-
-    # Calculate total confidence for each emotion across all segments
     total_confidences = [sum(confidence) for confidence in zip(*confidences)]
-
-    # Calculate total sum of confidence scores
     total_sum = sum(total_confidences)
-
-    # Calculate percentage of each emotion present in the call recording
     emotion_percentages = [round(float(conf / total_sum) * 100, 2) for conf in total_confidences]
-
-    # Convert prediction probabilities to emotion labels
     predicted_emotions = [emotion_classes[np.argmax(emotion_probs)] for emotion_probs in aggregated_prediction]
-
     timestamp = datetime.now()
-
-    # Store data in the PostgreSQL database
-    async with SessionLocal() as db:
+    with SessionLocal() as db:
         db_recording = Recording(
             patient_id=patient_id,
             patient_name=patient_name,
@@ -221,9 +178,8 @@ async def predict(patient_id: int, patient_age: int, patient_name: str, file: Up
             timestamp=timestamp,
         )
         db.add(db_recording)
-        await db.commit()
+        db.commit()
 
-    # Return predicted emotions, confidences, and paths to generated plots
     return {
         "patient_id": patient_id,
         "patient_name": patient_name,
@@ -234,27 +190,24 @@ async def predict(patient_id: int, patient_age: int, patient_name: str, file: Up
     }
 
 @app.post("/addnewpatient")
-async def create_patient(patient: PatientIn):
-    async with SessionLocal() as db:
+def create_patient(patient: PatientIn):
+    with SessionLocal() as db:
         db_patient = Patient(name=patient.name, age=patient.age)
         db.add(db_patient)
-        await db.commit()
+        db.commit()
     return {"message": "Patient added successfully!"}
 
 @app.get("/getpatients")
-async def get_patients():
-    async with SessionLocal() as db:
+def get_patients():
+    with SessionLocal() as db:
         patients = db.query(Patient).all()
     return patients
 
 @app.get("/getpatient/{patient_id}")
-async def get_patient(patient_id: int):
+def get_patient(patient_id: int):
     try:
-        # Convert patient_id to integer
         patient_id = int(patient_id)
-
-        async with SessionLocal() as db:
-            # Find the patient with the specified ID
+        with SessionLocal() as db:
             patient = db.query(Patient).filter(Patient.id == patient_id).first()
 
         if patient:
@@ -263,64 +216,55 @@ async def get_patient(patient_id: int):
             raise HTTPException(status_code=404, detail="Patient not found")
 
     except ValueError as e:
-        # Handle invalid patient_id format
         raise HTTPException(status_code=400, detail="Invalid patient ID format")
 
     except Exception as e:
-        # Handle any other unexpected exceptions
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @app.get("/deletepatient/{patient_id}")
-async def delete_patient(patient_id: int):
+def delete_patient(patient_id: int):
     try:
-        async with SessionLocal() as db:
-            # Check if the patient exists
+        with SessionLocal() as db:
             patient = db.query(Patient).filter(Patient.id == patient_id).first()
             if not patient:
                 raise HTTPException(status_code=404, detail="Patient not found")
 
-            # Delete all recordings associated with the patient
             db.query(Recording).filter(Recording.patient_id == patient_id).delete()
-
-            # Delete the patient
             db.delete(patient)
 
-            await db.commit()
+            db.commit()
             return {"message": "Patient and their analysis deleted successfully!"}
 
     except HTTPException as e:
         raise e
 
     except Exception as e:
-        await db.rollback()
+        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/deleteanalysis/{analysis_id}")
-async def delete_analysis(analysis_id: int):
+def delete_analysis(analysis_id: int):
     try:
-        async with SessionLocal() as db:
-            # Check if the analysis exists
+        with SessionLocal() as db:
             analysis = db.query(Recording).filter(Recording.id == analysis_id).first()
             if not analysis:
                 raise HTTPException(status_code=404, detail="Analysis not found")
 
-            # Delete the specific analysis
             db.delete(analysis)
-
-            await db.commit()
+            db.commit()
             return {"message": "Analysis deleted successfully!"}
 
     except HTTPException as e:
         raise e
 
     except Exception as e:
-        await db.rollback()
+        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/getanalysis/{patient_id}")
-async def get_analysis(patient_id: int):
+def get_analysis(patient_id: int):
     try:
-        async with SessionLocal() as db:
+        with SessionLocal() as db:
             analysis_results = db.query(Recording).filter(Recording.patient_id == patient_id).all()
 
         if not analysis_results:
@@ -336,4 +280,3 @@ async def get_analysis(patient_id: int):
 
 if __name__ == "__main__":
     uvicorn.run(app, host='0.0.0.0', port=10000)
-
