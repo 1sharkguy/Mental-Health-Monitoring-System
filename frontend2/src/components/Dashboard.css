@@ -1,0 +1,64 @@
+html, body {
+    height:100%;
+} 
+
+body {
+    background-image: url('https://images.unsplash.com/photo-1521729839347-131a32f9abcb?q=80&w=1197&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: auto 125%;
+    background-repeat: no-repeat;
+    background-position: left top;
+    overflow: auto;
+}
+
+.titleflex {
+    display: flex;
+}
+
+h1 {
+    text-align: center;
+    font-size: 45px;
+    font-weight: 600;
+    background-image: linear-gradient(to bottom, #553c9a, #b393d3);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+
+.boxes {
+    display: flex;
+  }
+
+  
+.patientlist {
+    background-color: #f3fbff;
+    border-radius: 10px; /* Adjust the radius to control the curve of the corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Adjust the values for the shadow effect */
+    padding: 20px; /* Adjust padding as needed */
+    height: 75vh;
+    margin-left: 2.5%;
+    margin-right: 4%;
+    width: 300px;
+  }
+
+.analysis {
+    background-color: #f3fbff;
+    border-radius: 10px; /* Adjust the radius to control the curve of the corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Adjust the values for the shadow effect */
+    padding: 20px; /* Adjust padding as needed */
+    height: 75vh;
+    margin-right: 2.5%;
+}
+
+.searchspace {
+    border: '2px solid grey';
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

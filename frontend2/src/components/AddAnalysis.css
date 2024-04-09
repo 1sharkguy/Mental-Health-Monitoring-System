@@ -1,0 +1,57 @@
+html, body {
+    height:100%;
+} 
+
+body {
+    background-image: url('https://images.unsplash.com/photo-1521729839347-131a32f9abcb?q=80&w=1197&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: auto 125%;
+    background-repeat: no-repeat;
+    background-position: left top;
+    overflow: auto;
+
+}
+
+.titleflex {
+    display: flex;
+}
+
+h1 {
+    text-align: center;
+    font-size: 45px;
+    font-weight: 600;
+    background-image: linear-gradient(to bottom, #553c9a, #b393d3);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+h2 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+    background-image: linear-gradient(to bottom, #553c9a, #b393d3);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.yoyo {
+    background-color: #f3fbff;
+    border-radius: 10px; /* Adjust the radius to control the curve of the corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Adjust the values for the shadow effect */
+    padding: 20px; /* Adjust padding as needed */
+    width: 300px;
+    height: 45vh; /* Adjust height as needed */
+    position: absolute;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center vertically and horizontally */
+  }

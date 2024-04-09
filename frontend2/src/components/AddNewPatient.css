@@ -1,0 +1,70 @@
+html, body {
+    height:100%;
+} 
+
+body {
+    background-image: url('https://images.unsplash.com/photo-1521729839347-131a32f9abcb?q=80&w=1197&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: auto 125%;
+    background-repeat: no-repeat;
+    background-position: left top;
+    overflow: auto;
+
+}
+
+.titleflex {
+    display: flex;
+}
+
+h1 {
+    text-align: center;
+    font-size: 45px;
+    font-weight: 600;
+    background-image: linear-gradient(to bottom, #553c9a, #b393d3);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.yoyo {
+    background-color: #f3fbff;
+    border-radius: 10px; /* Adjust the radius to control the curve of the corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Adjust the values for the shadow effect */
+    padding: 20px; /* Adjust padding as needed */
+    width: 300px;
+    height: 45vh; /* Adjust height as needed */
+    position: absolute;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+  .fileInput {
+    display: none; /* Hide the default file input */
+  }
+  
+  .fileInputLabel {
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    padding: 10px 20px; /* Button padding */
+    border-radius: 5px; /* Button border radius */
+    cursor: pointer; /* Show pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+  }
+  
+  .fileInputLabel:hover {
+    background-color: #0056b3; /* Darker background color on hover */
+  }
+  
+  /* Optional: Style the file input label to look like a button */
+  .fileInputLabel:active {
+    background-color: #003366; /* Dark background color when button is clicked */
+  }
+  
+  /* Optional: Style the file input label for focus */
+  .fileInputLabel:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 0 2px #007bff; /* Add custom focus outline */
+  }
+  
+  
