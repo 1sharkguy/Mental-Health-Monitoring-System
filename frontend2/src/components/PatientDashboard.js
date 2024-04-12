@@ -40,7 +40,7 @@ function PatientDashboard() {
 
     const fetchAnalysisData = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_URL_GETA}/${selectedPatient.id}`);
+            const response = await axios.get(process.env.REACT_APP_URL_GETA.replace('{patient_id}', selectedPatient.id));
             if (response.status === 200) {
                 setAnalysisResults(response.data);
             } else {
@@ -78,7 +78,7 @@ function PatientDashboard() {
     const handleRemoveAnalysis = async () => {
         try {
             if (selectedAnalysis) {
-                const response = await axios.get(`${process.env.REACT_APP_URL_DELETEA}/${selectedAnalysis.id}`);
+                const response = await axios.get(process.env.REACT_APP_URL_DELETEA.replace('{analysis_id}', selectedAnalysis.id));
                 if (response.status === 200) {
                     console.log('Analysis deleted successfully');
                     setAnalysisResults(prevResults => prevResults.filter(result => result.id !== selectedAnalysis.id));
@@ -99,7 +99,7 @@ function PatientDashboard() {
     const handleDeletePatient = async () => {
         try {
             if (selectedPatient) {
-                const response = await axios.get(`${process.env.REACT_APP_URL_DELETEP}/${selectedPatient.id}`);
+                const response = await axios.get(process.env.REACT_APP_URL_DELETEP.replace('{patient_id}', selectedPatient.id));
 
                 if (response.status === 200) {
                     console.log('Patient and associated analysis deleted successfully');
