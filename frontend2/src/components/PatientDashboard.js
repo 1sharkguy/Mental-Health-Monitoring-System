@@ -75,12 +75,12 @@ function PatientDashboard() {
     };
 
     const handleAddAnalysis = () => {
-        if (patient) {
+        if (selectedPatient) {
             navigate('/add-analysis', {
                 state: {
-                    patientId: patient.id,
-                    patientAge: patient.age,
-                    patientName: patient.name
+                    patientId: selectedPatient.id,
+                    patientAge: selectedPatient.age,
+                    patientName: selectedPatient.name
                 }
             });
         }
@@ -181,13 +181,13 @@ function PatientDashboard() {
                 <Box className="analysis" sx={{ width: '75%' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <h3 style={{ marginTop: '0', marginRight: 'auto' }}>Analysis</h3>
-                        {patient && (
+                        {selectedPatient && (
                             <>
                                 <div style={{ textAlign: 'center', marginTop: '0' }}>
                                     <p style={{ marginTop: '0' }}>
-                                        <span style={{ fontWeight: 'bold' }}>ID:</span> {patient.id} &nbsp;
-                                        <span style={{ fontWeight: 'bold' }}>Name:</span> {patient.name} &nbsp;
-                                        <span style={{ fontWeight: 'bold' }}>Age:</span> {patient.age}
+                                        <span style={{ fontWeight: 'bold' }}>ID:</span> {selectedPatient.id} &nbsp;
+                                        <span style={{ fontWeight: 'bold' }}>Name:</span> {selectedPatient.name} &nbsp;
+                                        <span style={{ fontWeight: 'bold' }}>Age:</span> {selectedPatient.age}
                                     </p>
                                 </div>
                                 <Box sx={{ display: 'flex', marginTop: '0', marginLeft: 'auto' }}>
