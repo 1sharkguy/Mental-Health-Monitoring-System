@@ -15,7 +15,6 @@ function PatientDashboard() {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [patients, setPatients] = useState([]);
-    const [patient, setPatient] = useState(null);
     const [analysisResults, setAnalysisResults] = useState([]);
     const [selectedAnalysis, setSelectedAnalysis] = useState(null);
     const [selectedPatient, setSelectedPatient] = useState(null);
@@ -30,37 +29,27 @@ function PatientDashboard() {
             }
         };
 
-        const fetchPatientData = async () => {
-            try {
-                const response = await axios.get(process.env.REACT_APP_URL_GETP);
-                if (response.status === 200) {
-                    setPatient(response.data);
-                    setSelectedPatient(response.data);
-                } else {
-                    console.error('Error fetching patient data:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error fetching patient data:', error);
-            }
-        };
-
-        const fetchAnalysisData = async () => {
-            try {
-                const response = await axios.get(process.env.REACT_APP_URL_GETA);
-                if (response.status === 200) {
-                    setAnalysisResults(response.data);
-                } else {
-                    console.error('Error fetching analysis data:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error fetching analysis data:', error);
-            }
-        };
-
         fetchData();
-        fetchPatientData();
-        fetchAnalysisData();
-    }, [patientId]);
+    }, []);
+
+    useEffect(() => {
+        if (selectedPatient) {
+            fetchAnalysisData();
+        }
+    }, [selectedPatient]);
+
+    const fetchAnalysisData = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_URL_GETA}/${selectedPatient.id}`);
+            if (response.status === 200) {
+                setAnalysisResults(response.data);
+            } else {
+                console.error('Error fetching analysis data:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching analysis data:', error);
+        }
+    };
 
     const filteredOptions = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -70,7 +59,7 @@ function PatientDashboard() {
     const handlePatientClick = async (patient) => {
         setSelectedPatient(patient);
         setAnalysisResults([]);
-        setSelectedAnalysis(null); // Clear the selected analysis
+        setSelectedAnalysis(null);
         navigate(`/patient/${patient.id}`);
     };
 
