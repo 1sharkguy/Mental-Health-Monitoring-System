@@ -170,13 +170,13 @@ function PatientDashboard() {
                 <Box className="analysis" sx={{ width: '75%' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <h3 style={{ marginTop: '0', marginRight: 'auto' }}>Analysis</h3>
-                        {selectedPatient && (
+                        {patient && (
                             <>
                                 <div style={{ textAlign: 'center', marginTop: '0' }}>
                                     <p style={{ marginTop: '0' }}>
-                                        <span style={{ fontWeight: 'bold' }}>ID:</span> {selectedPatient.id} &nbsp;
-                                        <span style={{ fontWeight: 'bold' }}>Name:</span> {selectedPatient.name} &nbsp;
-                                        <span style={{ fontWeight: 'bold' }}>Age:</span> {selectedPatient.age}
+                                        <span style={{ fontWeight: 'bold' }}>ID:</span> {patient.id} &nbsp;
+                                        <span style={{ fontWeight: 'bold' }}>Name:</span> {patient.name} &nbsp;
+                                        <span style={{ fontWeight: 'bold' }}>Age:</span> {patient.age}
                                     </p>
                                 </div>
                                 <Box sx={{ display: 'flex', marginTop: '0', marginLeft: 'auto' }}>
