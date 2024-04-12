@@ -40,7 +40,7 @@ function PatientDashboard() {
 
     const fetchAnalysisData = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_URL_GETA}/${selectedPatient.id}`);
+            const response = await axios.get(process.env.REACT_APP_URL_GETA);
             if (response.status === 200) {
                 setAnalysisResults(response.data);
             } else {
