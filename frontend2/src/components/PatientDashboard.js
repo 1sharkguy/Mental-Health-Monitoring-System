@@ -40,7 +40,7 @@ function PatientDashboard() {
 
     const fetchAnalysisData = async () => {
         try {
-            const response = await axios.get(process.env.REACT_APP_URL_GETA.replace('{patient_id}', selectedPatient.id));
+            const response = await axios.get(`http://localhost:8000/getanalysis/${selectedPatient.id}`);
             if (response.status === 200) {
                 setAnalysisResults(response.data);
             } else {
@@ -78,7 +78,7 @@ function PatientDashboard() {
     const handleRemoveAnalysis = async () => {
         try {
             if (selectedAnalysis) {
-                const response = await axios.get(process.env.REACT_APP_URL_DELETEA.replace('{analysis_id}', selectedAnalysis.id));
+                const response = await axios.get(`http://localhost:8000/deleteanalysis/${selectedAnalysis.id}`);
                 if (response.status === 200) {
                     console.log('Analysis deleted successfully');
                     setAnalysisResults(prevResults => prevResults.filter(result => result.id !== selectedAnalysis.id));
@@ -99,8 +99,7 @@ function PatientDashboard() {
     const handleDeletePatient = async () => {
         try {
             if (selectedPatient) {
-                console.log(selectedPatient.id);
-                const url = `${process.env.REACT_APP_URL_DELETEP}/${selectedPatient.id}`;
+                const url = `http://localhost:8000/deletepatient/${selectedPatient.id}`;
                 const response = await axios.get(url);
 
                 if (response.status === 200) {
@@ -172,13 +171,13 @@ function PatientDashboard() {
                 <Box className="analysis" sx={{ width: '75%' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <h3 style={{ marginTop: '0', marginRight: 'auto' }}>Analysis</h3>
-                        {patient && (
+                        {selectedPatient && (
                             <>
                                 <div style={{ textAlign: 'center', marginTop: '0' }}>
                                     <p style={{ marginTop: '0' }}>
-                                        <span style={{ fontWeight: 'bold' }}>ID:</span> {patient.id} &nbsp;
-                                        <span style={{ fontWeight: 'bold' }}>Name:</span> {patient.name} &nbsp;
-                                        <span style={{ fontWeight: 'bold' }}>Age:</span> {patient.age}
+                                        <span style={{ fontWeight: 'bold' }}>ID:</span> {selectedPatient.id} &nbsp;
+                                        <span style={{ fontWeight: 'bold' }}>Name:</span> {selectedPatient.name} &nbsp;
+                                        <span style={{ fontWeight: 'bold' }}>Age:</span> {selectedPatient.age}
                                     </p>
                                 </div>
                                 <Box sx={{ display: 'flex', marginTop: '0', marginLeft: 'auto' }}>
