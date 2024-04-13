@@ -99,7 +99,7 @@ function PatientDashboard() {
     const handleDeletePatient = async () => {
         try {
             if (selectedPatient) {
-                const url = `https://mental-health-monitoring-system.onrender.com/deletepatient/${selectedPatient.id}`;
+                const url = process.env.REACT_APP_URL_DELETEP + selectedPatient.id;
                 const response = await axios.get(url);
 
                 if (response.status === 200) {
