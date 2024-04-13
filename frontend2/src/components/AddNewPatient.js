@@ -25,7 +25,7 @@ function AddNewPatient() {
       return;
     }
     try {
-      await axios.post("http://localhost:8000/addnewpatient", patientData);
+      await axios.post("https://mental-health-monitoring-system.onrender.com/addnewpatient", patientData);
       navigate('/'); // Redirect to the dashboard after adding the patient
     } catch (error) {
       console.error('Error adding patient:', error);
