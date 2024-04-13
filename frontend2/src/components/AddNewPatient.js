@@ -25,7 +25,7 @@ function AddNewPatient() {
       return;
     }
     try {
-      await axios.post(process.env.REACT_APP_URL_ADDP, patientData);
+      await axios.post("http://localhost:8000/addnewpatient", patientData);
       navigate('/'); // Redirect to the dashboard after adding the patient
     } catch (error) {
       console.error('Error adding patient:', error);
