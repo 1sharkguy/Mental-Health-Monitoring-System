@@ -7,9 +7,8 @@ from sklearn.preprocessing import StandardScaler
 from datetime import datetime
 from pydantic import BaseModel
 import matplotlib.pyplot as plt
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base,sessionmaker, scoped_session
 from sqlalchemy import Column, Integer, String, DateTime, JSON
-from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
 from pydub import AudioSegment
 from typing import List, Dict
