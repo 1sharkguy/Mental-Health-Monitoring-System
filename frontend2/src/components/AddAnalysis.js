@@ -29,7 +29,7 @@ function AddAnalysis() {
       formData.append('file', audioFile);
       
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', process.env.REACT_APP_URL_PREDICT, true);
+      xhr.open('POST', `https://mental-health-monitoring-system.onrender.com/predict?patient_id=${encodeURIComponent(patientId)}&patient_name=${encodeURIComponent(patientName)}&patient_age=${encodeURIComponent(patientAge)}`, true);
       
       xhr.onload = function() {
         if (xhr.status === 200) {
