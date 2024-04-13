@@ -40,7 +40,7 @@ function PatientDashboard() {
 
     const fetchAnalysisData = async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/getanalysis/${selectedPatient.id}`);
+            const response = await axios.get(`https://mental-health-monitoring-system.onrender.com/getanalysis/${selectedPatient.id}`);
             if (response.status === 200) {
                 setAnalysisResults(response.data);
             } else {
@@ -78,7 +78,7 @@ function PatientDashboard() {
     const handleRemoveAnalysis = async () => {
         try {
             if (selectedAnalysis) {
-                const response = await axios.get(`http://localhost:8000/deleteanalysis/${selectedAnalysis.id}`);
+                const response = await axios.get(`https://mental-health-monitoring-system.onrender.com/deleteanalysis/${selectedAnalysis.id}`);
                 if (response.status === 200) {
                     console.log('Analysis deleted successfully');
                     setAnalysisResults(prevResults => prevResults.filter(result => result.id !== selectedAnalysis.id));
@@ -99,7 +99,7 @@ function PatientDashboard() {
     const handleDeletePatient = async () => {
         try {
             if (selectedPatient) {
-                const url = `http://localhost:8000/deletepatient/${selectedPatient.id}`;
+                const url = `https://mental-health-monitoring-system.onrender.com/deletepatient/${selectedPatient.id}`;
                 const response = await axios.get(url);
 
                 if (response.status === 200) {
