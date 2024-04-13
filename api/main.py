@@ -74,10 +74,10 @@ def ping():
     return "Hello, I am alive"
 
 # Function to save uploaded file to a temporary location
-def save_uploaded_file(file: UploadFile) -> str:
+async def save_uploaded_file(file: UploadFile) -> str:
     _, temp_file_path = tempfile.mkstemp(dir="/opt/render/project/src/temp", suffix=".wav")
     with open(temp_file_path, "wb") as temp_file:
-        temp_file.write(file.file.read())
+        temp_file.write(await file.read())
     return temp_file_path
 
 def divide_audio(audio_path: str, segment_length: float, temp_dir: str) -> List[np.ndarray]:
@@ -150,8 +150,8 @@ def get_features(path):
     return result
 
 @app.post("/predict")
-def predict(patient_id: int, patient_age: int, patient_name: str, file: UploadFile = File(...)) -> Dict:
-    file_path = save_uploaded_file(file)
+async def predict(patient_id: int, patient_age: int, patient_name: str, file: UploadFile = File(...)) -> Dict:
+    file_path = await save_uploaded_file(file)
     segments = divide_audio(file_path, segment_length=5, temp_dir="//opt//render//project//src//temp")
     predictions = []
     for segment in segments:
