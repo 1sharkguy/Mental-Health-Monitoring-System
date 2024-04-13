@@ -99,7 +99,7 @@ function PatientDashboard() {
     const handleDeletePatient = async () => {
         try {
             if (selectedPatient) {
-                const response = await axios.get(`${process.env.REACT_APP_URL_DELETEP}/${selectedPatient.id}`);
+                const response = await axios.get(process.env.REACT_APP_URL_DELETEP);
 
                 if (response.status === 200) {
                     console.log('Patient and associated analysis deleted successfully');
