@@ -4,7 +4,7 @@ import axios from 'axios';
 const fetchPatients = async () => {
   try {
     // Make a GET request to the /getpatients endpoint of your backend API
-    const response = await axios.get("http://localhost:8000/getpatients");
+    const response = await axios.get('https://mental-health-monitoring-system.onrender.com/getpatients');
 
     // Extract the patient data from the response
     const patients = response.data;
